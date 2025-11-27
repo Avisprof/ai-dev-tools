@@ -65,3 +65,7 @@ todo-app/
 4. **Toggle Complete**: Click the circle checkbox to mark as done
 5. **Filter Tasks**: Use the tabs to filter by All/Active/Done
 
+## Preview
+![preview_todo_app](/images/01_todo_app.png)
+
+
