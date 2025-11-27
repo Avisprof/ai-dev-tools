@@ -65,6 +65,38 @@ todo-app/
 4. **Toggle Complete**: Click the circle checkbox to mark as done
 5. **Filter Tasks**: Use the tabs to filter by All/Active/Done
 
+## Testing
+
+Run the test suite to verify all functionality works correctly:
+
+```bash
+# Run all tests
+uv run python manage.py test todos
+
+# Run tests with verbose output
+uv run python manage.py test todos -v 2
+
+# Run a specific test class
+uv run python manage.py test todos.tests.TodoModelTests
+
+# Run a specific test method
+uv run python manage.py test todos.tests.TodoModelTests.test_create_todo
+```
+
+### Test Coverage
+
+| Test Class | Tests | Description |
+|------------|-------|-------------|
+| `TodoModelTests` | 5 | Model creation, string repr, defaults, timestamps, ordering |
+| `TodoFormTests` | 4 | Valid data, required fields, optional fields, date format |
+| `TodoListViewTests` | 5 | Display todos, filters, empty state, counts |
+| `TodoCreateViewTests` | 3 | GET form, POST valid, POST invalid |
+| `TodoUpdateViewTests` | 2 | GET with data, POST updates |
+| `TodoDeleteViewTests` | 2 | GET confirmation, POST deletes |
+| `TodoToggleViewTests` | 3 | Toggle resolved status, redirect handling |
+
+**Total: 24 tests**
+
 ## Preview
 ![preview_todo_app](/images/01_todo_app.png)
 
