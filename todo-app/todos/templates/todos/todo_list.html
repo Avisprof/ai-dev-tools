@@ -1,0 +1,78 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}Your Todos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2 class="page-title">Your Tasks</h2>
+    <a href="{% url 'todos:create' %}" class="btn btn-primary">
+        <span>+</span> New Task
+    </a>
+</div>
+
+<div class="filter-tabs">
+    <a href="{% url 'todos:list' %}" class="filter-tab {% if filter == 'all' %}active{% endif %}">
+        All<span class="filter-count">({{ total_count }})</span>
+    </a>
+    <a href="{% url 'todos:list' %}?filter=active" class="filter-tab {% if filter == 'active' %}active{% endif %}">
+        Active<span class="filter-count">({{ active_count }})</span>
+    </a>
+    <a href="{% url 'todos:list' %}?filter=resolved" class="filter-tab {% if filter == 'resolved' %}active{% endif %}">
+        Done<span class="filter-count">({{ resolved_count }})</span>
+    </a>
+</div>
+
+{% if todos %}
+    <div class="todo-list">
+        {% for todo in todos %}
+        <div class="todo-item {% if todo.resolved %}resolved{% endif %}">
+            <a href="{% url 'todos:toggle' todo.pk %}?next={{ request.get_full_path|urlencode }}" 
+               class="todo-checkbox" 
+               title="{% if todo.resolved %}Mark as active{% else %}Mark as done{% endif %}">
+            </a>
+            
+            <div class="todo-content">
+                <div class="todo-title">{{ todo.title }}</div>
+                {% if todo.description %}
+                    <div class="todo-description">{{ todo.description|truncatewords:20 }}</div>
+                {% endif %}
+                <div class="todo-meta">
+                    {% if todo.due_date %}
+                        {% load custom_filters %}
+                        <span class="todo-due-date {% if todo.due_date|is_overdue and not todo.resolved %}overdue{% elif todo.due_date|is_today %}today{% endif %}">
+                            📅 {{ todo.due_date|date:"M j, Y" }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="todo-actions">
+                <a href="{% url 'todos:edit' todo.pk %}" class="action-btn" title="Edit">✏️</a>
+                <a href="{% url 'todos:delete' todo.pk %}" class="action-btn delete" title="Delete">🗑️</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h3>
+            {% if filter == 'active' %}
+                No active tasks
+            {% elif filter == 'resolved' %}
+                No completed tasks yet
+            {% else %}
+                No tasks yet
+            {% endif %}
+        </h3>
+        <p>
+            {% if filter == 'all' %}
+                Create your first task to get started!
+            {% else %}
+                <a href="{% url 'todos:list' %}" style="color: var(--accent-cyan);">View all tasks</a>
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
+{% endblock %}
+
